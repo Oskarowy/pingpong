@@ -8,11 +8,15 @@
 #include <StdCtrls.hpp>
 #include <Forms.hpp>
 #include <ExtCtrls.hpp>
+#include <Graphics.hpp>
 //---------------------------------------------------------------------------
 class TForm1 : public TForm
 {
 __published:	// IDE-managed Components
-    TShape *Shape1;
+    TShape *background;
+    TImage *ball;
+    TImage *paddleLeft;
+    TImage *paddleRight;
 private:	// User declarations
 public:		// User declarations
     __fastcall TForm1(TComponent* Owner);
