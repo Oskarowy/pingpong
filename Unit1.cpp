@@ -12,9 +12,20 @@ TForm1 *Form1;
     int x=-5;
     int y=-5;
 
-    bool leftPaddleHit(TImage * ball, TImage * paddle)
+    bool paddleLeftHit(TImage * ball, TImage * paddle)
     {
-        if(ball->Left >= paddle->Left+paddle->Width)
+        if(ball->Left <= paddle->Left+paddle->Width &&
+           ball->Top >= paddle->Top-ball->Height &&
+           ball->Top <= paddle->Top+paddle->Height)
+        return true;
+        else return false;
+    }
+
+    bool paddleRightHit(TImage * ball, TImage * paddle)
+    {
+        if(ball->Left+ball->Width >= paddle->Left &&
+           ball->Top >= paddle->Top-ball->Height &&
+           ball->Top <= paddle->Top+paddle->Height)
         return true;
         else return false;
     }
@@ -37,6 +48,9 @@ void __fastcall TForm1::timerBallTimer(TObject *Sender)
     if(ball->Left <= background->Left) x = -x;
     if(ball->Left+ball->Width >= background->Width) x = -x;
     /////////////////////////////////////////////////////////////////////////
+
+    if(paddleLeftHit(ball,paddleLeft)) x = -x;
+    if(paddleRightHit(ball,paddleRight)) x = -x;
 }
 //---------------------------------------------------------------------------
 void __fastcall TForm1::movePaddleUpTimerTimer(TObject *Sender)

@@ -18,11 +18,19 @@ __published:	// IDE-managed Components
     TImage *paddleLeft;
     TImage *paddleRight;
     TTimer *timerBall;
-    TTimer *movePaddleUp;
-    TTimer *movePaddleDown;
+    TTimer *moveRightPaddleUp;
+    TTimer *moveRightPaddleDown;
+    TTimer *moveLeftPaddleUp;
+    TTimer *moveLeftPaddleDown;
     void __fastcall timerBallTimer(TObject *Sender);
     void __fastcall movePaddleUpTimerTimer(TObject *Sender);
-    void __fastcall movePaddleDownTimer(TObject *Sender);
+    void __fastcall moveRightPaddleDownTimer(TObject *Sender);
+    void __fastcall FormKeyDown(TObject *Sender, WORD &Key,
+          TShiftState Shift);
+    void __fastcall moveLeftPaddleDownTimer(TObject *Sender);
+    void __fastcall moveLeftPaddleUpTimer(TObject *Sender);
+    void __fastcall FormKeyUp(TObject *Sender, WORD &Key,
+          TShiftState Shift);
 private:	// User declarations
 public:		// User declarations
     __fastcall TForm1(TComponent* Owner);

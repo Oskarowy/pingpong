@@ -41,13 +41,40 @@ void __fastcall TForm1::timerBallTimer(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TForm1::movePaddleUpTimerTimer(TObject *Sender)
 {
-    if(paddleLeft->Top > 10) paddleLeft->Top -= 10;
     if(paddleRight->Top > 10) paddleRight->Top -= 10;
 }
 //---------------------------------------------------------------------------
-void __fastcall TForm1::movePaddleDownTimer(TObject *Sender)
+void __fastcall TForm1::moveRightPaddleDownTimer(TObject *Sender)
+{
+    if(paddleRight->Top+paddleRight->Height+10 < background->Top+background->Height) paddleRight->Top += 10;
+}
+
+void __fastcall TForm1::moveLeftPaddleDownTimer(TObject *Sender)
 {
     if(paddleLeft->Top+paddleLeft->Height+10 < background->Top+background->Height) paddleLeft->Top += 10;
-    if(paddleRight->Top+paddleRight->Height+10 < background->Top+background->Height) paddleRight->Top += 10;
+}
+//---------------------------------------------------------------------------
+void __fastcall TForm1::moveLeftPaddleUpTimer(TObject *Sender)
+{
+    if(paddleLeft->Top > 10) paddleLeft->Top -= 10;
+}
+//---------------------------------------------------------------------------
+void __fastcall TForm1::FormKeyDown(TObject *Sender, WORD &Key,
+      TShiftState Shift)
+{
+    if(Key == VK_UP) moveRightPaddleUp->Enabled = true;
+    if(Key == VK_DOWN) moveRightPaddleDown->Enabled = true;
+    if(Key == 0x57) moveLeftPaddleUp->Enabled = true;
+    if(Key == 0x53) moveLeftPaddleDown->Enabled = true;
+}
+//---------------------------------------------------------------------------
+//---------------------------------------------------------------------------
+void __fastcall TForm1::FormKeyUp(TObject *Sender, WORD &Key,
+      TShiftState Shift)
+{
+    if(Key == VK_UP) moveRightPaddleUp->Enabled = false;
+    if(Key == VK_DOWN) moveRightPaddleDown->Enabled = false;
+    if(Key == 0x57) moveLeftPaddleUp->Enabled = false;
+    if(Key == 0x53) moveLeftPaddleDown->Enabled = false;
 }
 //---------------------------------------------------------------------------
