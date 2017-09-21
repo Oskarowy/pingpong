@@ -3,7 +3,7 @@ object Form1: TForm1
   Top = 124
   Width = 979
   Height = 563
-  Caption = 'Form1'
+  Caption = 'PingPong v.1.0.0'
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
