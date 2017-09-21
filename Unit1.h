@@ -18,7 +18,11 @@ __published:	// IDE-managed Components
     TImage *paddleLeft;
     TImage *paddleRight;
     TTimer *timerBall;
+    TTimer *movePaddleUp;
+    TTimer *movePaddleDown;
     void __fastcall timerBallTimer(TObject *Sender);
+    void __fastcall movePaddleUpTimerTimer(TObject *Sender);
+    void __fastcall movePaddleDownTimer(TObject *Sender);
 private:	// User declarations
 public:		// User declarations
     __fastcall TForm1(TComponent* Owner);

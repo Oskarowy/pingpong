@@ -938,7 +938,21 @@ object Form1: TForm1
   object timerBall: TTimer
     Interval = 15
     OnTimer = timerBallTimer
-    Left = 40
-    Top = 24
+    Left = 560
+    Top = 224
+  end
+  object movePaddleUp: TTimer
+    Enabled = False
+    Interval = 20
+    OnTimer = movePaddleUpTimerTimer
+    Left = 56
+    Top = 16
+  end
+  object movePaddleDown: TTimer
+    Enabled = False
+    Interval = 20
+    OnTimer = movePaddleDownTimer
+    Left = 56
+    Top = 48
   end
 end

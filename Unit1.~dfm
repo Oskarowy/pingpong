@@ -1,10 +1,12 @@
 object Form1: TForm1
-  Left = 270
-  Top = 214
-  Width = 979
-  Height = 563
+  Left = 444
+  Top = 125
+  Width = 953
+  Height = 609
   Caption = 'PingPong v.1.0.0'
   Color = clBtnFace
+  UseDockManager = True
+  DockSite = True
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
   Font.Height = -11
@@ -16,14 +18,14 @@ object Form1: TForm1
   object background: TShape
     Left = 0
     Top = 0
-    Width = 963
-    Height = 525
+    Width = 937
+    Height = 571
     Align = alClient
     Brush.Color = clTeal
   end
   object ball: TImage
-    Left = 360
-    Top = 208
+    Left = 576
+    Top = 256
     Width = 32
     Height = 32
     AutoSize = True
@@ -131,7 +133,7 @@ object Form1: TForm1
   end
   object paddleLeft: TImage
     Left = 56
-    Top = 184
+    Top = 128
     Width = 31
     Height = 130
     AutoSize = True
@@ -932,5 +934,11 @@ object Form1: TForm1
       FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF00
       0000}
     Transparent = True
+  end
+  object timerBall: TTimer
+    Interval = 15
+    OnTimer = timerBallTimer
+    Left = 40
+    Top = 24
   end
 end
