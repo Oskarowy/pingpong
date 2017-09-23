@@ -13,7 +13,6 @@
 class TForm1 : public TForm
 {
 __published:	// IDE-managed Components
-    TShape *background;
     TImage *ball;
     TImage *paddleLeft;
     TImage *paddleRight;
@@ -22,6 +21,9 @@ __published:	// IDE-managed Components
     TTimer *moveRightPaddleDown;
     TTimer *moveLeftPaddleUp;
     TTimer *moveLeftPaddleDown;
+    TShape *background;
+    TLabel *scoreboard;
+    TEdit *playerLeft;
     void __fastcall timerBallTimer(TObject *Sender);
     void __fastcall movePaddleUpTimerTimer(TObject *Sender);
     void __fastcall moveRightPaddleDownTimer(TObject *Sender);
@@ -30,6 +32,11 @@ __published:	// IDE-managed Components
     void __fastcall moveLeftPaddleDownTimer(TObject *Sender);
     void __fastcall moveLeftPaddleUpTimer(TObject *Sender);
     void __fastcall FormKeyUp(TObject *Sender, WORD &Key,
+          TShiftState Shift);
+    void __fastcall FormResize(TObject *Sender);
+    void __fastcall FormCreate(TObject *Sender);
+    void __fastcall playerLeftChange(TObject *Sender);
+    void __fastcall playerLeftKeyDown(TObject *Sender, WORD &Key,
           TShiftState Shift);
 private:	// User declarations
 public:		// User declarations
