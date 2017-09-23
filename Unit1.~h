@@ -24,6 +24,7 @@ __published:	// IDE-managed Components
     TShape *background;
     TLabel *scoreboard;
     TEdit *playerLeft;
+    TEdit *playerRight;
     void __fastcall timerBallTimer(TObject *Sender);
     void __fastcall movePaddleUpTimerTimer(TObject *Sender);
     void __fastcall moveRightPaddleDownTimer(TObject *Sender);
@@ -37,6 +38,9 @@ __published:	// IDE-managed Components
     void __fastcall FormCreate(TObject *Sender);
     void __fastcall playerLeftChange(TObject *Sender);
     void __fastcall playerLeftKeyDown(TObject *Sender, WORD &Key,
+          TShiftState Shift);
+    void __fastcall playerRightChange(TObject *Sender);
+    void __fastcall playerRightKeyDown(TObject *Sender, WORD &Key,
           TShiftState Shift);
 private:	// User declarations
 public:		// User declarations

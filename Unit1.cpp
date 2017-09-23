@@ -36,7 +36,7 @@ TForm1 *Form1;
         else return false;
     }
 
-    bool isPointForLeft(TImage *ball, TShape * background)
+    bool isPointForRight(TImage *ball, TShape * background)
     {
         if(ball->Left <= background->Left+ball->Width+10)
         {
@@ -46,7 +46,7 @@ TForm1 *Form1;
         else return false;
     }
 
-    bool isPointForRight(TImage *ball, TShape * background)
+    bool isPointForLeft(TImage *ball, TShape * background)
     {
         if(ball->Left+ball->Width >= background->Width+ball->Width+10)
         {
@@ -89,7 +89,7 @@ void __fastcall TForm1::timerBallTimer(TObject *Sender)
         {
             gameOn=false;
             scoreboard->Visible=true;
-            scoreboard->Caption="Punkt dla gracza: "+leftPlayerName+" \n \n Wynik gry: \n" +leftPlayerName+
+            scoreboard->Caption="< Punkt dla gracza: "+leftPlayerName+" \n \n Wynik gry: \n" +leftPlayerName+
             ": "+IntToStr(leftPlayerCounter)+"     "+rightPlayerName+": "+IntToStr(rightPlayerCounter);
             Application->ProcessMessages(); Sleep(1000);
             scoreboard->Visible=false;
@@ -100,7 +100,7 @@ void __fastcall TForm1::timerBallTimer(TObject *Sender)
         {
             gameOn=false;
             scoreboard->Visible=true;
-            scoreboard->Caption="Punkt dla gracza: "+rightPlayerName+" \n \n Wynik gry: \n" +leftPlayerName+
+            scoreboard->Caption="Punkt dla gracza: "+rightPlayerName+" > \n \n Wynik gry: \n" +leftPlayerName+
             ": "+IntToStr(leftPlayerCounter)+"     "+rightPlayerName+": "+IntToStr(rightPlayerCounter);
             Application->ProcessMessages(); Sleep(1000);
             scoreboard->Visible=false;
@@ -166,7 +166,14 @@ void __fastcall TForm1::FormResize(TObject *Sender)
 void __fastcall TForm1::FormCreate(TObject *Sender)
 {
     gameOn=false;
-    playerLeft->Visible=true;
+    Application->MessageBox("Witaj w grze w Ping Ponga!\n\nSterowanie: \n Lewy gracz: klawisze W i S, \n Prawy gracz: strza³ki góra i dó³\n\nJeœli chcesz, wprowadŸ w nastêpnym ekranie w³asne imiona dla obu graczy.\n\nAby gra by³a ciekawsza, ka¿de wciœniêcie klawisza '+' zwiêkszy szybkoœæ poruszania siê pi³eczki, a wciœniêcie klawisza '-' zwolni j¹!.\n\nOkno gry mo¿esz dowolnie powiêkszaæ",
+				"PingPong by Oskarowy", MB_OK);
+    if (Application->MessageBox("Czy chcesz wprowadziæ w³asne imiona graczy?",
+			"Wybierz nazwy graczy", MB_YESNO | MB_ICONQUESTION)==IDYES)
+            {
+                playerLeft->Visible=true;
+            }
+    else gameOn=true;
     scoreboard->Top=background->Top+scoreboard->Height;
     scoreboard->Left=background->Left+background->Width/2-scoreboard->Width/2;
     paddleLeft->Left=0;

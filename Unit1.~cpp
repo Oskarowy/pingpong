@@ -89,7 +89,7 @@ void __fastcall TForm1::timerBallTimer(TObject *Sender)
         {
             gameOn=false;
             scoreboard->Visible=true;
-            scoreboard->Caption="Punkt dla gracza "+leftPlayerName+" \n \n Wynik gry: \n" +leftPlayerName+
+            scoreboard->Caption="Punkt dla gracza: "+leftPlayerName+" \n \n Wynik gry: \n" +leftPlayerName+
             ": "+IntToStr(leftPlayerCounter)+"     "+rightPlayerName+": "+IntToStr(rightPlayerCounter);
             Application->ProcessMessages(); Sleep(1000);
             scoreboard->Visible=false;
@@ -100,7 +100,7 @@ void __fastcall TForm1::timerBallTimer(TObject *Sender)
         {
             gameOn=false;
             scoreboard->Visible=true;
-            scoreboard->Caption="Punkt dla gracza "+rightPlayerName+" \n \n Wynik gry: \n" +leftPlayerName+
+            scoreboard->Caption="Punkt dla gracza: "+rightPlayerName+" \n \n Wynik gry: \n" +leftPlayerName+
             ": "+IntToStr(leftPlayerCounter)+"     "+rightPlayerName+": "+IntToStr(rightPlayerCounter);
             Application->ProcessMessages(); Sleep(1000);
             scoreboard->Visible=false;
@@ -167,7 +167,6 @@ void __fastcall TForm1::FormCreate(TObject *Sender)
 {
     gameOn=false;
     playerLeft->Visible=true;
-    gameOn=true;
     scoreboard->Top=background->Top+scoreboard->Height;
     scoreboard->Left=background->Left+background->Width/2-scoreboard->Width/2;
     paddleLeft->Left=0;
@@ -186,7 +185,28 @@ void __fastcall TForm1::playerLeftChange(TObject *Sender)
 void __fastcall TForm1::playerLeftKeyDown(TObject *Sender, WORD &Key,
       TShiftState Shift)
 {
-     if(Key == VK_RETURN) playerLeft->Visible = false;
+     if(Key == VK_RETURN)
+     {
+        playerLeft->Visible = false;
+        playerRight->Visible=true;
+     }
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TForm1::playerRightChange(TObject *Sender)
+{
+    rightPlayerName=playerRight->Text;
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TForm1::playerRightKeyDown(TObject *Sender, WORD &Key,
+      TShiftState Shift)
+{
+    if(Key == VK_RETURN)
+    {
+        playerRight->Visible = false;
+        gameOn=true;
+    }
 }
 //---------------------------------------------------------------------------
 

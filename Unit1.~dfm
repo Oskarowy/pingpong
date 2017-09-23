@@ -1546,15 +1546,38 @@ object Form1: TForm1
     Visible = False
   end
   object playerLeft: TEdit
-    Left = 192
-    Top = 24
-    Width = 121
-    Height = 21
+    Left = 312
+    Top = 144
+    Width = 249
+    Height = 33
+    Font.Charset = EASTEUROPE_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -21
+    Font.Name = 'Arial Narrow'
+    Font.Style = [fsBold]
+    ParentFont = False
     TabOrder = 0
-    Text = 'playerLeft'
+    Text = 'Wpisz imi'#281' gracza lewego: '
     Visible = False
     OnChange = playerLeftChange
     OnKeyDown = playerLeftKeyDown
+  end
+  object playerRight: TEdit
+    Left = 312
+    Top = 144
+    Width = 249
+    Height = 33
+    Font.Charset = EASTEUROPE_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -21
+    Font.Name = 'Arial Narrow'
+    Font.Style = [fsBold]
+    ParentFont = False
+    TabOrder = 1
+    Text = 'Wpisz imi'#281' gracza prawego: '
+    Visible = False
+    OnChange = playerRightChange
+    OnKeyDown = playerRightKeyDown
   end
   object timerBall: TTimer
     Interval = 15
