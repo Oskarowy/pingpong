@@ -14,7 +14,7 @@ TForm1 *Form1;
     int y=-5;
     int leftPlayerCounter=0;
     int rightPlayerCounter=0;
-    bool gameOn=false;
+    bool isGameOn;
     AnsiString leftPlayerName="Lewy";
     AnsiString rightPlayerName="Prawy";
 
@@ -36,9 +36,9 @@ TForm1 *Form1;
         else return false;
     }
 
-    bool isPointForLeft(TImage *ball, TShape * background)
+    bool isPointForRight(TImage *ball, TShape * background)
     {
-        if(ball->Left <= background->Left+ball->Width+10)
+        if(ball->Left <= background->Left+ball->Width-20)
         {
             leftPlayerCounter++;
             return true;
@@ -46,9 +46,9 @@ TForm1 *Form1;
         else return false;
     }
 
-    bool isPointForRight(TImage *ball, TShape * background)
+    bool isPointForLeft(TImage *ball, TShape * background)
     {
-        if(ball->Left+ball->Width >= background->Width+ball->Width+10)
+        if(ball->Left+ball->Width >= background->Width+ball->Width-20)
         {
             rightPlayerCounter++;
             return true;
@@ -74,7 +74,7 @@ __fastcall TForm1::TForm1(TComponent* Owner)
 
 void __fastcall TForm1::timerBallTimer(TObject *Sender)
 {
-    if(gameOn)
+    if(isGameOn)
     {
         ball->Left-= x;
         ball->Top+= y;
@@ -87,25 +87,25 @@ void __fastcall TForm1::timerBallTimer(TObject *Sender)
 
         if(isPointForLeft(ball,background))
         {
-            gameOn=false;
+            isGameOn=false;
             scoreboard->Visible=true;
-            scoreboard->Caption="Punkt dla gracza: "+leftPlayerName+" \n \n Wynik gry: \n" +leftPlayerName+
+            scoreboard->Caption="< Punkt dla gracza: "+leftPlayerName+" \n \n Wynik gry: \n" +leftPlayerName+
             ": "+IntToStr(leftPlayerCounter)+"     "+rightPlayerName+": "+IntToStr(rightPlayerCounter);
             Application->ProcessMessages(); Sleep(1000);
             scoreboard->Visible=false;
             serve(ball,paddleLeft,paddleRight,background);
-            gameOn=true;
+            isGameOn=true;
         }
         if(isPointForRight(ball,background))
         {
-            gameOn=false;
+            isGameOn=false;
             scoreboard->Visible=true;
-            scoreboard->Caption="Punkt dla gracza: "+rightPlayerName+" \n \n Wynik gry: \n" +leftPlayerName+
+            scoreboard->Caption="Punkt dla gracza: "+rightPlayerName+" > \n \n Wynik gry: \n" +leftPlayerName+
             ": "+IntToStr(leftPlayerCounter)+"     "+rightPlayerName+": "+IntToStr(rightPlayerCounter);
             Application->ProcessMessages(); Sleep(1000);
             scoreboard->Visible=false;
             serve(ball,paddleLeft,paddleRight,background);
-            gameOn=true;
+            isGameOn=true;
         }
 
     }
@@ -138,6 +138,14 @@ void __fastcall TForm1::FormKeyDown(TObject *Sender, WORD &Key,
     if(Key == VK_DOWN) moveRightPaddleDown->Enabled = true;
     if(Key == 0x57) moveLeftPaddleUp->Enabled = true;
     if(Key == 0x53) moveLeftPaddleDown->Enabled = true;
+    if(Key == VK_ADD)
+    {
+        timerBall->Interval=10;
+        moveLeftPaddleUp->Interval=10;
+        moveLeftPaddleDown->Interval=10;
+        moveRightPaddleUp->Interval=10;
+        moveRightPaddleDown->Interval=10;
+    }
 }
 //---------------------------------------------------------------------------
 //---------------------------------------------------------------------------
@@ -165,8 +173,16 @@ void __fastcall TForm1::FormResize(TObject *Sender)
 
 void __fastcall TForm1::FormCreate(TObject *Sender)
 {
-    gameOn=false;
-    playerLeft->Visible=true;
+    isGameOn=false;
+    Application->MessageBox("Witaj w grze w Ping Ponga!\n\nSterowanie: \n Lewy gracz: klawisze W i S, \n Prawy gracz: strza³ki góra i dó³\n\nJeœli chcesz, wprowadŸ w nastêpnym ekranie w³asne imiona dla obu graczy.\n\nAby gra by³a ciekawsza, wciœnij klawisz '+' i zobacz, co siê stanie! :)\n\nOkno gry mo¿esz dowolnie powiêkszaæ",
+				"PingPong by Oskarowy", MB_OK);
+    if (Application->MessageBox("Czy chcesz wprowadziæ w³asne imiona graczy?",
+			"Wybierz nazwy graczy", MB_YESNO | MB_ICONQUESTION)==IDYES)
+            {
+                playerLeft->Visible=true;
+            }
+    else isGameOn=true;
+
     scoreboard->Top=background->Top+scoreboard->Height;
     scoreboard->Left=background->Left+background->Width/2-scoreboard->Width/2;
     paddleLeft->Left=0;
@@ -205,8 +221,9 @@ void __fastcall TForm1::playerRightKeyDown(TObject *Sender, WORD &Key,
     if(Key == VK_RETURN)
     {
         playerRight->Visible = false;
-        gameOn=true;
+        isGameOn=true;
     }
 }
 //---------------------------------------------------------------------------
+
 

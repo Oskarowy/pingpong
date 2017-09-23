@@ -1,8 +1,8 @@
 object Form1: TForm1
   Left = 232
   Top = 116
-  Width = 953
-  Height = 609
+  Width = 837
+  Height = 561
   Caption = 'PingPong v.1.0.0'
   Color = clBtnFace
   UseDockManager = True
@@ -22,14 +22,14 @@ object Form1: TForm1
   object background: TShape
     Left = 0
     Top = 0
-    Width = 937
-    Height = 571
+    Width = 821
+    Height = 523
     Align = alClient
     Brush.Color = 8421440
   end
   object ball: TImage
-    Left = 576
-    Top = 256
+    Left = 272
+    Top = 224
     Width = 23
     Height = 23
     AutoSize = True
@@ -811,8 +811,8 @@ object Form1: TForm1
     Transparent = True
   end
   object paddleRight: TImage
-    Left = 880
-    Top = 176
+    Left = 616
+    Top = 208
     Width = 69
     Height = 109
     AutoSize = True
@@ -1546,8 +1546,8 @@ object Form1: TForm1
     Visible = False
   end
   object playerLeft: TEdit
-    Left = 312
-    Top = 144
+    Left = 256
+    Top = 128
     Width = 249
     Height = 33
     Font.Charset = EASTEUROPE_CHARSET
@@ -1563,8 +1563,8 @@ object Form1: TForm1
     OnKeyDown = playerLeftKeyDown
   end
   object playerRight: TEdit
-    Left = 312
-    Top = 144
+    Left = 256
+    Top = 128
     Width = 249
     Height = 33
     Font.Charset = EASTEUROPE_CHARSET
@@ -1582,35 +1582,35 @@ object Form1: TForm1
   object timerBall: TTimer
     Interval = 15
     OnTimer = timerBallTimer
-    Left = 560
-    Top = 224
+    Left = 320
+    Top = 208
   end
   object moveRightPaddleUp: TTimer
     Enabled = False
     Interval = 20
     OnTimer = movePaddleUpTimerTimer
-    Left = 888
-    Top = 104
+    Left = 616
+    Top = 136
   end
   object moveRightPaddleDown: TTimer
     Enabled = False
     Interval = 20
     OnTimer = moveRightPaddleDownTimer
-    Left = 888
-    Top = 136
+    Left = 616
+    Top = 168
   end
   object moveLeftPaddleUp: TTimer
     Enabled = False
     Interval = 20
     OnTimer = moveLeftPaddleUpTimer
-    Left = 64
-    Top = 64
+    Left = 72
+    Top = 168
   end
   object moveLeftPaddleDown: TTimer
     Enabled = False
     Interval = 20
     OnTimer = moveLeftPaddleDownTimer
-    Left = 64
-    Top = 24
+    Left = 72
+    Top = 136
   end
 end
