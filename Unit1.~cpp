@@ -12,8 +12,8 @@ TForm1 *Form1;
 
     int x=-5;
     int y=-5;
-    int leftPlayerCounter=0;
-    int rightPlayerCounter=0;
+    int leftPlayerCounter=9;
+    int rightPlayerCounter=9;
     bool isGameOn;
     AnsiString leftPlayerName="Lewy";
     AnsiString rightPlayerName="Prawy";
@@ -22,7 +22,8 @@ TForm1 *Form1;
     {
         if(ball->Left <= paddle->Left+paddle->Width &&
            ball->Top >= paddle->Top-ball->Height &&
-           ball->Top <= paddle->Top+paddle->Height)
+           ball->Top <= paddle->Top+paddle->Height &&
+           ball->Top-ball->Height <= paddle->Top+paddle->Height)
         return true;
         else return false;
     }
@@ -31,16 +32,17 @@ TForm1 *Form1;
     {
         if(ball->Left+ball->Width >= paddle->Left &&
            ball->Top >= paddle->Top-ball->Height &&
-           ball->Top <= paddle->Top+paddle->Height)
+           ball->Top <= paddle->Top+paddle->Height &&
+           ball->Top-ball->Height >= paddle->Top-paddle->Height)
         return true;
         else return false;
     }
 
     bool isPointForRight(TImage *ball, TShape * background)
     {
-        if(ball->Left <= background->Left+ball->Width-20)
+        if(ball->Left <= background->Left+ball->Width-60)
         {
-            leftPlayerCounter++;
+            rightPlayerCounter++;
             return true;
         }
         else return false;
@@ -48,9 +50,9 @@ TForm1 *Form1;
 
     bool isPointForLeft(TImage *ball, TShape * background)
     {
-        if(ball->Left+ball->Width >= background->Width+ball->Width-20)
+        if(ball->Left+ball->Width >= background->Width+ball->Width+40)
         {
-            rightPlayerCounter++;
+            leftPlayerCounter++;
             return true;
         }
         else return false;
@@ -62,6 +64,7 @@ TForm1 *Form1;
         paddleRight->Left=background->Width-paddleRight->Width;
         paddleRight->Top=background->Height/2-paddleRight->Height/2;
         ball->Left=background->Width/2;
+        ball->Top=background->Height/2;
         y=-y;
         x=-x;
     }
@@ -87,25 +90,72 @@ void __fastcall TForm1::timerBallTimer(TObject *Sender)
 
         if(isPointForLeft(ball,background))
         {
-            isGameOn=false;
-            scoreboard->Visible=true;
-            scoreboard->Caption="< Punkt dla gracza: "+leftPlayerName+" \n \n Wynik gry: \n" +leftPlayerName+
-            ": "+IntToStr(leftPlayerCounter)+"     "+rightPlayerName+": "+IntToStr(rightPlayerCounter);
-            Application->ProcessMessages(); Sleep(1000);
-            scoreboard->Visible=false;
-            serve(ball,paddleLeft,paddleRight,background);
-            isGameOn=true;
+            if(leftPlayerCounter<11)
+            {
+                isGameOn=false;
+                scoreboard->Visible=true;
+                scoreboard->Caption="< Punkt dla gracza: "+leftPlayerName+" \n \n Wynik gry: \n" +leftPlayerName+
+                ": "+IntToStr(leftPlayerCounter)+"     "+rightPlayerName+": "+IntToStr(rightPlayerCounter);
+                Application->ProcessMessages(); Sleep(1000);
+                scoreboard->Visible=false;
+                serve(ball,paddleLeft,paddleRight,background);
+                isGameOn=true;
+            }
+            else
+            {
+                isGameOn=false;
+                timerBall->Enabled=false;
+                scoreboard->Visible=true;
+                scoreboard->Caption="< Punkt dla gracza: "+leftPlayerName+" \n \n Seta wygrywa gracz "+leftPlayerName+"!";
+                Application->ProcessMessages(); Sleep(1000);
+
+                if (Application->MessageBox("Czy chcesz zagrac jeszcze raz?",
+			    "Rewan¿", MB_YESNO | MB_ICONQUESTION)==IDYES)
+                {
+                    scoreboard->Visible=false;
+                    leftPlayerCounter=0;
+                    rightPlayerCounter=0;
+                    timerBall->Enabled=true;
+                    serve(ball,paddleLeft,paddleRight,background);
+                    isGameOn=true;
+                }
+                else Application->Terminate();
+            }
         }
+
         if(isPointForRight(ball,background))
         {
-            isGameOn=false;
-            scoreboard->Visible=true;
-            scoreboard->Caption="Punkt dla gracza: "+rightPlayerName+" > \n \n Wynik gry: \n" +leftPlayerName+
-            ": "+IntToStr(leftPlayerCounter)+"     "+rightPlayerName+": "+IntToStr(rightPlayerCounter);
-            Application->ProcessMessages(); Sleep(1000);
-            scoreboard->Visible=false;
-            serve(ball,paddleLeft,paddleRight,background);
-            isGameOn=true;
+            if(rightPlayerCounter<11)
+            {
+                isGameOn=false;
+                scoreboard->Visible=true;
+                scoreboard->Caption="Punkt dla gracza: "+rightPlayerName+" > \n \n Wynik gry: \n" +leftPlayerName+
+                ": "+IntToStr(leftPlayerCounter)+"     "+rightPlayerName+": "+IntToStr(rightPlayerCounter);
+                Application->ProcessMessages(); Sleep(1000);
+                scoreboard->Visible=false;
+                serve(ball,paddleLeft,paddleRight,background);
+                isGameOn=true;
+            }
+            else
+            {
+                isGameOn=false;
+                timerBall->Enabled=false;
+                scoreboard->Visible=true;
+                scoreboard->Caption="< Punkt dla gracza: "+rightPlayerName+" \n \n Seta wygrywa gracz "+rightPlayerName+"!";
+                Application->ProcessMessages(); Sleep(1000);
+
+                if (Application->MessageBox("Czy chcesz zagrac jeszcze raz?",
+			    "Rewan¿", MB_YESNO | MB_ICONQUESTION)==IDYES)
+                {
+                    scoreboard->Visible=false;
+                    leftPlayerCounter=0;
+                    rightPlayerCounter=0;
+                    timerBall->Enabled=true;
+                    serve(ball,paddleLeft,paddleRight,background);
+                    isGameOn=true;
+                }
+                else Application->Terminate();
+            }
         }
 
     }
@@ -140,11 +190,13 @@ void __fastcall TForm1::FormKeyDown(TObject *Sender, WORD &Key,
     if(Key == 0x53) moveLeftPaddleDown->Enabled = true;
     if(Key == VK_ADD)
     {
-        timerBall->Interval=10;
-        moveLeftPaddleUp->Interval=10;
-        moveLeftPaddleDown->Interval=10;
-        moveRightPaddleUp->Interval=10;
-        moveRightPaddleDown->Interval=10;
+        paddleLeft->Picture->LoadFromFile("img/paddleLong.bmp");
+        paddleRight->Picture->LoadFromFile("img/paddleLong.bmp");
+    }
+    if(Key == VK_SUBTRACT)
+    {
+        paddleLeft->Picture->LoadFromFile("img/paddle.bmp");
+        paddleRight->Picture->LoadFromFile("img/paddle.bmp");
     }
 }
 //---------------------------------------------------------------------------
@@ -162,7 +214,7 @@ void __fastcall TForm1::FormKeyUp(TObject *Sender, WORD &Key,
 void __fastcall TForm1::FormResize(TObject *Sender)
 {
     scoreboard->Top=background->Top+scoreboard->Height;
-    scoreboard->Left=background->Left+background->Width/2-scoreboard->Width/2;
+    scoreboard->Left=background->Left+background->Width/2-scoreboard->Width;
     paddleLeft->Left=0;
     paddleLeft->Top=background->Height/2-paddleLeft->Height/2;
     paddleRight->Left=background->Width-paddleRight->Width;
@@ -174,7 +226,7 @@ void __fastcall TForm1::FormResize(TObject *Sender)
 void __fastcall TForm1::FormCreate(TObject *Sender)
 {
     isGameOn=false;
-    Application->MessageBox("Witaj w grze w Ping Ponga!\n\nSterowanie: \n Lewy gracz: klawisze W i S, \n Prawy gracz: strza³ki góra i dó³\n\nJeœli chcesz, wprowadŸ w nastêpnym ekranie w³asne imiona dla obu graczy.\n\nAby gra by³a ciekawsza, wciœnij klawisz '+' i zobacz, co siê stanie! :)\n\nOkno gry mo¿esz dowolnie powiêkszaæ",
+    Application->MessageBox("Witaj w grze w Ping Ponga!\n\nSterowanie: \n   Lewy gracz: klawisze W i S, \n   Prawy gracz: strza³ki góra i dó³\n\nJeœli chcesz, wprowadŸ w nastêpnym ekranie w³asne imiona dla obu graczy.\n\nSeta wygrywa gracz, który pierwszy zdobêdzie 11 punktów.\n\nAby gra by³a ciekawsza, wciœnij klawisz '+' i zobacz, co siê stanie! Poprzednie ustawienie przywraca wciœniêcie klawisza '-' :)\n\nOkno gry mo¿esz dowolnie powiêkszaæ",
 				"PingPong by Oskarowy", MB_OK);
     if (Application->MessageBox("Czy chcesz wprowadziæ w³asne imiona graczy?",
 			"Wybierz nazwy graczy", MB_YESNO | MB_ICONQUESTION)==IDYES)
@@ -184,7 +236,7 @@ void __fastcall TForm1::FormCreate(TObject *Sender)
     else isGameOn=true;
 
     scoreboard->Top=background->Top+scoreboard->Height;
-    scoreboard->Left=background->Left+background->Width/2-scoreboard->Width/2;
+    scoreboard->Left=background->Left+background->Width/2-scoreboard->Width;
     paddleLeft->Left=0;
     paddleLeft->Top=background->Height/2-paddleLeft->Height/2;
     paddleRight->Left=background->Width-paddleRight->Width;
