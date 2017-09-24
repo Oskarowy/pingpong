@@ -12,8 +12,8 @@ TForm1 *Form1;
 
     int x=-5;
     int y=-5;
-    int leftPlayerCounter=9;
-    int rightPlayerCounter=9;
+    int leftPlayerCounter=0;
+    int rightPlayerCounter=0;
     bool isGameOn;
     AnsiString leftPlayerName="Lewy";
     AnsiString rightPlayerName="Prawy";

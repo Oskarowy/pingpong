@@ -40,7 +40,7 @@ TForm1 *Form1;
 
     bool isPointForRight(TImage *ball, TShape * background)
     {
-        if(ball->Left <= background->Left+ball->Width-60)
+        if(ball->Left <= background->Left+ball->Width-40)
         {
             rightPlayerCounter++;
             return true;
