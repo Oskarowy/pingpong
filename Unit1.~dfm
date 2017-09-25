@@ -3,7 +3,7 @@ object Form1: TForm1
   Top = 221
   Width = 837
   Height = 561
-  Caption = 'PingPong v.1.0.0'
+  Caption = 'PingPong by Oskar'
   Color = clBtnFace
   UseDockManager = True
   DockSite = True

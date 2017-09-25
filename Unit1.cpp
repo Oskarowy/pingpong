@@ -20,10 +20,9 @@ TForm1 *Form1;
 
     bool paddleLeftHit(TImage * ball, TImage * paddle)
     {
-        if(ball->Left <= paddle->Left+paddle->Width &&
-           ball->Top >= paddle->Top-ball->Height &&
-           ball->Top <= paddle->Top+paddle->Height &&
-           ball->Top-ball->Height <= paddle->Top+paddle->Height)
+        if(ball->Left <= paddle->Left + paddle->Width &&
+           ball->Top <= paddle->Top + paddle->Height &&
+           ball->Top + ball->Height >= paddle->Top)
         return true;
         else return false;
     }
@@ -40,7 +39,7 @@ TForm1 *Form1;
 
     bool isPointForRight(TImage *ball, TShape * background)
     {
-        if(ball->Left <= background->Left+ball->Width-40)
+        if(ball->Left <= background->Left+ball->Width-50)
         {
             rightPlayerCounter++;
             return true;
@@ -50,7 +49,7 @@ TForm1 *Form1;
 
     bool isPointForLeft(TImage *ball, TShape * background)
     {
-        if(ball->Left+ball->Width >= background->Width+ball->Width+40)
+        if(ball->Left+ball->Width >= background->Width+40)
         {
             leftPlayerCounter++;
             return true;
@@ -226,7 +225,7 @@ void __fastcall TForm1::FormResize(TObject *Sender)
 
 void __fastcall TForm1::FormCreate(TObject *Sender)
 {
-    isGameOn=false;
+    /*isGameOn=false;
     Application->MessageBox("Witaj w grze w Ping Ponga!\n\nSterowanie: \n   Lewy gracz: klawisze W i S, \n   Prawy gracz: strza³ki góra i dó³\n\nJeœli chcesz, wprowadŸ w nastêpnym ekranie w³asne imiona dla obu graczy.\n\nSeta wygrywa gracz, który pierwszy zdobêdzie 11 punktów.\n\nAby gra by³a ciekawsza, wciœnij klawisz '+' i zobacz, co siê stanie! Poprzednie ustawienie przywraca wciœniêcie klawisza '-' :)\n\nOkno gry mo¿esz dowolnie powiêkszaæ",
 				"PingPong by Oskarowy", MB_OK);
     if (Application->MessageBox("Czy chcesz wprowadziæ w³asne imiona graczy?",
@@ -234,7 +233,7 @@ void __fastcall TForm1::FormCreate(TObject *Sender)
             {
                 playerLeft->Visible=true;
             }
-    else isGameOn=true;
+    else*/ isGameOn=true;
 
     scoreboard->Top=background->Top+scoreboard->Height;
     scoreboard->Left=background->Left+background->Width/2-scoreboard->Width;
