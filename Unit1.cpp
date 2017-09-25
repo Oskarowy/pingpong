@@ -12,13 +12,13 @@ TForm1 *Form1;
 
     int x=-5;
     int y=-5;
-    int leftPlayerCounter=10;
+    int leftPlayerCounter=0;
     int rightPlayerCounter=0;
     bool isGameOn;
     AnsiString leftPlayerName="Lewy";
     AnsiString rightPlayerName="Prawy";
 
-    bool paddleLeftHit(TImage * ball, TImage * paddle)
+   /* bool paddleLeftHit(TImage * ball, TImage * paddle)
     {
         if(ball->Left <= paddle->Left + paddle->Width &&
            ball->Top <= paddle->Top + paddle->Height &&
@@ -35,10 +35,10 @@ TForm1 *Form1;
         return true;
         else return false;
     }
-
+    */
     bool isPointForRight(TImage *ball, TImage *paddle)
     {
-        if(ball->Left <= paddle->Left+ball->Width-25)
+        if(ball->Left <= paddle->Left+ball->Width-45)
         {
             rightPlayerCounter++;
             return true;
@@ -48,7 +48,7 @@ TForm1 *Form1;
 
     bool isPointForLeft(TImage *ball, TImage *paddle)
     {
-        if(ball->Left+ball->Width >= paddle->Left + paddle->Width+25)
+        if(ball->Left+ball->Width >= paddle->Left + paddle->Width+20)
         {
             leftPlayerCounter++;
             return true;
@@ -77,14 +77,27 @@ void __fastcall TForm1::timerBallTimer(TObject *Sender)
 {
     if(isGameOn)
     {
+        ball->Visible=true;
         ball->Left-= x;
         ball->Top+= y;
 
         if(ball->Top <= background->Top) y = -y;
         if(ball->Top+ball->Height >= background->Top+background->Height) y = -y;
 
+        /*
         if(paddleLeftHit(ball,paddleLeft)) x = -x;
         if(paddleRightHit(ball,paddleRight)) x = -x;
+        */
+
+        // odbicie lew¹ paletk¹
+        if((ball->Left <= paddleLeft->Left + paddleLeft->Width) &&
+           (ball->Top <= paddleLeft->Top + paddleLeft->Height) &&
+           (ball->Top + ball->Height >= paddleLeft->Top)) x=-x;
+
+        //odbicie praw¹ paletk¹
+        if((ball->Left + ball->Width >= paddleRight->Left) &&
+           (ball->Top <= paddleRight->Top+paddleRight->Height) &&
+           (ball->Top + ball->Height >= paddleRight->Top)) x=-x;
 
         if(isPointForLeft(ball,paddleRight))
         {
@@ -198,13 +211,11 @@ void __fastcall TForm1::FormKeyDown(TObject *Sender, WORD &Key,
     if(Key == 0x53) moveLeftPaddleDown->Enabled = true;
     /*if(Key == VK_ADD)
     {
-        Form1->paddleLeft->Picture->Bitmap->LoadFromFile("img/paddleLong.bmp");
-        Form1->paddleRight->Picture->Bitmap->LoadFromFile("img/paddleLong.bmp");
+   
     }
     if(Key == VK_SUBTRACT)
     {
-        Form1->paddleLeft->Picture->Bitmap->LoadFromFile("img/paddle.bmp");
-        Form1->paddleRight->Picture->Bitmap->LoadFromFile("img/paddle.bmp");
+
     }
     */
 }
@@ -265,7 +276,7 @@ void __fastcall TForm1::playerLeftKeyDown(TObject *Sender, WORD &Key,
      if(Key == VK_RETURN)
      {
         playerLeft->Visible = false;
-        playerRight->Visible=true;
+        playerRight->Visible= true;
      }
 }
 //---------------------------------------------------------------------------

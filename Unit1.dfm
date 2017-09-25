@@ -28,8 +28,8 @@ object Form1: TForm1
     Brush.Color = 8421440
   end
   object ball: TImage
-    Left = 712
-    Top = 176
+    Left = 184
+    Top = 112
     Width = 23
     Height = 23
     AutoSize = True
@@ -89,6 +89,7 @@ object Form1: TForm1
       ED241CED241CED241CEDC3C3C3C3C3C3C3C3C3C3C3C3C3C3C3C3C3C3C3C3C324
       1CED241CED241CED241CED241CED241CED241CED241CED000000}
     Transparent = True
+    Visible = False
   end
   object paddleLeft: TImage
     Left = 0
