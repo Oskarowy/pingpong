@@ -12,7 +12,7 @@ TForm1 *Form1;
 
     int x=-5;
     int y=-5;
-    int leftPlayerCounter=0;
+    int leftPlayerCounter=10;
     int rightPlayerCounter=0;
     bool isGameOn;
     AnsiString leftPlayerName="Lewy";
@@ -29,17 +29,16 @@ TForm1 *Form1;
 
     bool paddleRightHit(TImage * ball, TImage * paddle)
     {
-        if(ball->Left+ball->Width >= paddle->Left &&
-           ball->Top >= paddle->Top-ball->Height &&
+        if(ball->Left + ball->Width >= paddle->Left &&
            ball->Top <= paddle->Top+paddle->Height &&
-           ball->Top-ball->Height >= paddle->Top-paddle->Height)
+           ball->Top + ball->Height >= paddle->Top)
         return true;
         else return false;
     }
 
-    bool isPointForRight(TImage *ball, TShape * background)
+    bool isPointForRight(TImage *ball, TImage *paddle)
     {
-        if(ball->Left <= background->Left+ball->Width-50)
+        if(ball->Left <= paddle->Left+ball->Width-25)
         {
             rightPlayerCounter++;
             return true;
@@ -47,9 +46,9 @@ TForm1 *Form1;
         else return false;
     }
 
-    bool isPointForLeft(TImage *ball, TShape * background)
+    bool isPointForLeft(TImage *ball, TImage *paddle)
     {
-        if(ball->Left+ball->Width >= background->Width+40)
+        if(ball->Left+ball->Width >= paddle->Left + paddle->Width+25)
         {
             leftPlayerCounter++;
             return true;
@@ -87,7 +86,7 @@ void __fastcall TForm1::timerBallTimer(TObject *Sender)
         if(paddleLeftHit(ball,paddleLeft)) x = -x;
         if(paddleRightHit(ball,paddleRight)) x = -x;
 
-        if(isPointForLeft(ball,background))
+        if(isPointForLeft(ball,paddleRight))
         {
             if(leftPlayerCounter<11)
             {
@@ -118,11 +117,16 @@ void __fastcall TForm1::timerBallTimer(TObject *Sender)
                     serve(ball,paddleLeft,paddleRight,background);
                     isGameOn=true;
                 }
-                else Application->Terminate();
+                else
+                {
+                    Application->MessageBox("Dziêki za grê! Kliknij OK aby wyjœæ",
+                    "Podziêkowanie",NULL);
+                    Application->Terminate();
+                }
             }
         }
 
-        if(isPointForRight(ball,background))
+        if(isPointForRight(ball,paddleLeft))
         {
             if(rightPlayerCounter<11)
             {
@@ -153,7 +157,12 @@ void __fastcall TForm1::timerBallTimer(TObject *Sender)
                     serve(ball,paddleLeft,paddleRight,background);
                     isGameOn=true;
                 }
-                else Application->Terminate();
+                else
+                {
+                    Application->MessageBox("Dziêki za grê! Kliknij OK aby wyjœæ",
+                    "Podziêkowanie",NULL);
+                    Application->Terminate();
+                }
             }
         }
 

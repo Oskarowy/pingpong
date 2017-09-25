@@ -1,8 +1,8 @@
 object Form1: TForm1
-  Left = 256
-  Top = 221
+  Left = 428
+  Top = 160
   Width = 837
-  Height = 561
+  Height = 563
   Caption = 'PingPong by Oskar'
   Color = clBtnFace
   UseDockManager = True
@@ -23,13 +23,13 @@ object Form1: TForm1
     Left = 0
     Top = 0
     Width = 821
-    Height = 523
+    Height = 525
     Align = alClient
     Brush.Color = 8421440
   end
   object ball: TImage
-    Left = 272
-    Top = 224
+    Left = 712
+    Top = 176
     Width = 23
     Height = 23
     AutoSize = True
@@ -92,7 +92,7 @@ object Form1: TForm1
   end
   object paddleLeft: TImage
     Left = 0
-    Top = 208
+    Top = 200
     Width = 22
     Height = 130
     AutoSize = True
@@ -379,8 +379,8 @@ object Form1: TForm1
     Transparent = True
   end
   object paddleRight: TImage
-    Left = 616
-    Top = 208
+    Left = 720
+    Top = 200
     Width = 22
     Height = 130
     AutoSize = True
