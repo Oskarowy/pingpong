@@ -700,21 +700,25 @@ object Form1: TForm1
     Font.Name = 'Arial Narrow'
     Font.Style = [fsBold]
     ParentFont = False
+    Transparent = True
     Visible = False
   end
   object gameOnSwitch: TLabel
-    Left = 248
-    Top = 184
-    Width = 262
-    Height = 23
+    Left = 200
+    Top = 176
+    Width = 369
+    Height = 57
     Alignment = taCenter
-    Caption = 'Wci'#347'nij spacj'#281', aby rozpocz'#261#263' gr'#281'!'
+    AutoSize = False
+    Caption = 'Wci'#347'nij spacj'#281', aby zaserwowa'#263' pi'#322'eczk'#281
     Font.Charset = EASTEUROPE_CHARSET
     Font.Color = clWindowText
-    Font.Height = -19
+    Font.Height = -21
     Font.Name = 'Arial Narrow'
     Font.Style = [fsBold]
     ParentFont = False
+    Transparent = True
+    Layout = tlCenter
   end
   object playerLeft: TEdit
     Left = 256

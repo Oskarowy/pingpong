@@ -37,7 +37,7 @@ TForm1 *Form1;
     }
     */
 
-    void setStartSetup(TImage * ball, TImage * paddleLeft, TImage * paddleRight,  TShape * background)
+    void setStartSetup(TImage * ball, TImage * paddleLeft, TImage * paddleRight,  TShape * background, TLabel *gameOnSwitch)
     {
         paddleLeft->Left=paddleLeft->Width*2;
         paddleLeft->Top=background->Height/2-paddleLeft->Height/2;
@@ -45,6 +45,8 @@ TForm1 *Form1;
         paddleRight->Top=background->Height/2-paddleRight->Height/2;
         ball->Left=background->Width/2;
         ball->Top=background->Height/2;
+        gameOnSwitch->Top=background->Top+gameOnSwitch->Height*3;
+        gameOnSwitch->Left=background->Left+background->Width/2-gameOnSwitch->Width/2;
     }
 
     void setScoreboard(TLabel *scoreboard, TShape *background)
@@ -55,7 +57,7 @@ TForm1 *Form1;
 
     bool isPointForRight(TImage *ball, TImage *paddle)
     {
-        if(ball->Left <= paddle->Left+paddle->Width-ball->Width)
+        if(ball->Left <= paddle->Left+paddle->Width-15)
         {
             ball->Visible=false;
             rightPlayerCounter++;
@@ -66,7 +68,7 @@ TForm1 *Form1;
 
     bool isPointForLeft(TImage *ball, TImage *paddle)
     {
-        if(ball->Left+ball->Width >= paddle->Left + ball->Width)
+        if(ball->Left+ball->Width >= paddle->Left +15)
         {
             ball->Visible=false;
             leftPlayerCounter++;
@@ -74,11 +76,18 @@ TForm1 *Form1;
         }
         else return false;
     }
-    void serve (TImage * ball, TImage * paddleLeft, TImage * paddleRight,  TShape * background)
+
+    void serve (TImage * ball, TImage * paddleLeft, TImage * paddleRight,  TShape * background, TLabel *gameOnSwitch)
     {
-        setStartSetup(ball,paddleLeft,paddleRight,background);
+        setStartSetup(ball,paddleLeft,paddleRight,background,gameOnSwitch);
         y=-y;
         x=-x;
+    }
+
+    void bounceFaster(TImage *ball, TTimer *timer)
+    {
+        x=-x;
+        if(timer->Interval>0) timer->Interval-=2;
     }
 //---------------------------------------------------------------------------
 __fastcall TForm1::TForm1(TComponent* Owner)
@@ -106,12 +115,13 @@ void __fastcall TForm1::timerBallTimer(TObject *Sender)
         // odbicie lew¹ paletk¹
         if((ball->Left <= paddleLeft->Left + paddleLeft->Width) &&
            (ball->Top <= paddleLeft->Top + paddleLeft->Height) &&
-           (ball->Top + ball->Height >= paddleLeft->Top)) x=-x;
+           (ball->Top + ball->Height >= paddleLeft->Top)) bounceFaster(ball,timerBall);
+
 
         //odbicie praw¹ paletk¹
         if((ball->Left + ball->Width >= paddleRight->Left) &&
            (ball->Top <= paddleRight->Top+paddleRight->Height) &&
-           (ball->Top + ball->Height >= paddleRight->Top)) x=-x;
+           (ball->Top + ball->Height >= paddleRight->Top)) bounceFaster(ball,timerBall);
 
         if(isPointForLeft(ball,paddleRight))
         {
@@ -123,8 +133,8 @@ void __fastcall TForm1::timerBallTimer(TObject *Sender)
                 ": "+IntToStr(leftPlayerCounter)+"     "+rightPlayerName+": "+IntToStr(rightPlayerCounter);
                 Application->ProcessMessages(); Sleep(1000);
                 scoreboard->Visible=false;
-                serve(ball,paddleLeft,paddleRight,background);
-                isGameOn=true;
+                serve(ball,paddleLeft,paddleRight,background,gameOnSwitch);
+                gameOnSwitch->Visible=true;
             }
             else
             {
@@ -141,8 +151,8 @@ void __fastcall TForm1::timerBallTimer(TObject *Sender)
                     leftPlayerCounter=0;
                     rightPlayerCounter=0;
                     timerBall->Enabled=true;
-                    serve(ball,paddleLeft,paddleRight,background);
-                    isGameOn=true;
+                    serve(ball,paddleLeft,paddleRight,background,gameOnSwitch);
+                    gameOnSwitch->Visible=true;
                 }
                 else
                 {
@@ -163,8 +173,8 @@ void __fastcall TForm1::timerBallTimer(TObject *Sender)
                 ": "+IntToStr(leftPlayerCounter)+"     "+rightPlayerName+": "+IntToStr(rightPlayerCounter);
                 Application->ProcessMessages(); Sleep(1000);
                 scoreboard->Visible=false;
-                serve(ball,paddleLeft,paddleRight,background);
-                isGameOn=true;
+                serve(ball,paddleLeft,paddleRight,background,gameOnSwitch);
+                gameOnSwitch->Visible=true;
             }
             else
             {
@@ -181,8 +191,8 @@ void __fastcall TForm1::timerBallTimer(TObject *Sender)
                     leftPlayerCounter=0;
                     rightPlayerCounter=0;
                     timerBall->Enabled=true;
-                    serve(ball,paddleLeft,paddleRight,background);
-                    isGameOn=true;
+                    serve(ball,paddleLeft,paddleRight,background,gameOnSwitch);
+                    gameOnSwitch->Visible=true;
                 }
                 else
                 {
@@ -198,22 +208,22 @@ void __fastcall TForm1::timerBallTimer(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TForm1::movePaddleUpTimerTimer(TObject *Sender)
 {
-    if(paddleRight->Top > 5) paddleRight->Top -= 15;
+    if(paddleRight->Top > 10) paddleRight->Top -= 20;
 }
 //---------------------------------------------------------------------------
 void __fastcall TForm1::moveRightPaddleDownTimer(TObject *Sender)
 {
-    if(paddleRight->Top+paddleRight->Height+10 < background->Top+background->Height) paddleRight->Top += 15;
+    if(paddleRight->Top+paddleRight->Height+10 < background->Top+background->Height) paddleRight->Top += 20;
 }
 
 void __fastcall TForm1::moveLeftPaddleDownTimer(TObject *Sender)
 {
-    if(paddleLeft->Top+paddleLeft->Height+10 < background->Top+background->Height) paddleLeft->Top += 15;
+    if(paddleLeft->Top+paddleLeft->Height+10 < background->Top+background->Height) paddleLeft->Top += 20;
 }
 //---------------------------------------------------------------------------
 void __fastcall TForm1::moveLeftPaddleUpTimer(TObject *Sender)
 {
-    if(paddleLeft->Top > 5) paddleLeft->Top -= 15;
+    if(paddleLeft->Top > 10) paddleLeft->Top -= 20;
 }
 //---------------------------------------------------------------------------
 void __fastcall TForm1::FormKeyDown(TObject *Sender, WORD &Key,
@@ -230,8 +240,13 @@ void __fastcall TForm1::FormKeyDown(TObject *Sender, WORD &Key,
     if(Key == VK_SUBTRACT)
     {
 
-    }
+    }        VK_SPACE
     */
+    if(Key == VK_SPACE)
+    {
+        gameOnSwitch->Visible=false;
+        isGameOn=true;
+    }
 }
 //---------------------------------------------------------------------------
 //---------------------------------------------------------------------------
@@ -248,7 +263,7 @@ void __fastcall TForm1::FormKeyUp(TObject *Sender, WORD &Key,
 void __fastcall TForm1::FormResize(TObject *Sender)
 {
     setScoreboard(scoreboard,background);
-    setStartSetup(ball,paddleLeft,paddleRight,background);
+    setStartSetup(ball,paddleLeft,paddleRight,background,gameOnSwitch);
 }
 //---------------------------------------------------------------------------
 
@@ -263,10 +278,10 @@ void __fastcall TForm1::FormCreate(TObject *Sender)
             {
                 playerLeft->Visible=true;
             }
-    else*/ isGameOn=true;
+    else*/ gameOnSwitch->Visible=true;
 
     setScoreboard(scoreboard,background);
-    setStartSetup(ball,paddleLeft,paddleRight,background);
+    setStartSetup(ball,paddleLeft,paddleRight,background,gameOnSwitch);
 }
 //---------------------------------------------------------------------------
 
@@ -303,5 +318,6 @@ void __fastcall TForm1::playerRightKeyDown(TObject *Sender, WORD &Key,
     }
 }
 //---------------------------------------------------------------------------
+
 
 

@@ -14,6 +14,7 @@ TForm1 *Form1;
     int y=-5;
     int leftPlayerCounter=0;
     int rightPlayerCounter=0;
+    int bounceCounts=0;
     bool isGameOn;
     AnsiString leftPlayerName="Lewy";
     AnsiString rightPlayerName="Prawy";
@@ -84,10 +85,10 @@ TForm1 *Form1;
         x=-x;
     }
 
-    void bounceFaster(TImage *ball, TTimer *timer)
+    void bounce(TImage *ball, TTimer *timer)
     {
         x=-x;
-        if(timer->Interval>0) timer->Interval-=2;
+        bounceCounts++;
     }
 //---------------------------------------------------------------------------
 __fastcall TForm1::TForm1(TComponent* Owner)
@@ -115,13 +116,13 @@ void __fastcall TForm1::timerBallTimer(TObject *Sender)
         // odbicie lew¹ paletk¹
         if((ball->Left <= paddleLeft->Left + paddleLeft->Width) &&
            (ball->Top <= paddleLeft->Top + paddleLeft->Height) &&
-           (ball->Top + ball->Height >= paddleLeft->Top)) bounceFaster(ball,timerBall);
+           (ball->Top + ball->Height >= paddleLeft->Top)) bounce(ball,timerBall);
 
 
         //odbicie praw¹ paletk¹
         if((ball->Left + ball->Width >= paddleRight->Left) &&
            (ball->Top <= paddleRight->Top+paddleRight->Height) &&
-           (ball->Top + ball->Height >= paddleRight->Top)) bounceFaster(ball,timerBall);
+           (ball->Top + ball->Height >= paddleRight->Top)) bounce(ball,timerBall);
 
         if(isPointForLeft(ball,paddleRight))
         {
@@ -130,7 +131,8 @@ void __fastcall TForm1::timerBallTimer(TObject *Sender)
                 isGameOn=false;
                 scoreboard->Visible=true;
                 scoreboard->Caption="< Punkt dla gracza: "+leftPlayerName+" \n \n Wynik gry: \n" +leftPlayerName+
-                ": "+IntToStr(leftPlayerCounter)+"     "+rightPlayerName+": "+IntToStr(rightPlayerCounter);
+                ": "+IntToStr(leftPlayerCounter)+"     "+rightPlayerName+": "+IntToStr(rightPlayerCounter)+
+                "\n\nUda³o Ci siê odbiæ pi³eczkê "+bounceCounts+" razy!";
                 Application->ProcessMessages(); Sleep(1000);
                 scoreboard->Visible=false;
                 serve(ball,paddleLeft,paddleRight,background,gameOnSwitch);
@@ -141,7 +143,8 @@ void __fastcall TForm1::timerBallTimer(TObject *Sender)
                 isGameOn=false;
                 timerBall->Enabled=false;
                 scoreboard->Visible=true;
-                scoreboard->Caption="< Punkt dla gracza: "+leftPlayerName+" \n \n Seta wygrywa gracz "+leftPlayerName+"!";
+                scoreboard->Caption="< Punkt dla gracza: "+leftPlayerName+" \n \n Seta wygrywa gracz "+leftPlayerName+"!"+
+                "\n\nUda³o Ci siê odbiæ pi³eczkê "+bounceCounts+" razy!";
                 Application->ProcessMessages(); Sleep(1000);
 
                 if (Application->MessageBox("Czy chcesz zagrac jeszcze raz?",
@@ -170,7 +173,8 @@ void __fastcall TForm1::timerBallTimer(TObject *Sender)
                 isGameOn=false;
                 scoreboard->Visible=true;
                 scoreboard->Caption="Punkt dla gracza: "+rightPlayerName+" > \n \n Wynik gry: \n" +leftPlayerName+
-                ": "+IntToStr(leftPlayerCounter)+"     "+rightPlayerName+": "+IntToStr(rightPlayerCounter);
+                ": "+IntToStr(leftPlayerCounter)+"     "+rightPlayerName+": "+IntToStr(rightPlayerCounter)+
+                "\n\nUda³o Ci siê odbiæ pi³eczkê "+bounceCounts+" razy!";
                 Application->ProcessMessages(); Sleep(1000);
                 scoreboard->Visible=false;
                 serve(ball,paddleLeft,paddleRight,background,gameOnSwitch);
@@ -181,7 +185,8 @@ void __fastcall TForm1::timerBallTimer(TObject *Sender)
                 isGameOn=false;
                 timerBall->Enabled=false;
                 scoreboard->Visible=true;
-                scoreboard->Caption="< Punkt dla gracza: "+rightPlayerName+" \n \n Seta wygrywa gracz "+rightPlayerName+"!";
+                scoreboard->Caption="< Punkt dla gracza: "+rightPlayerName+" \n \n Seta wygrywa gracz "+rightPlayerName+"!"+
+                "\n\nUda³o Ci siê odbiæ pi³eczkê "+bounceCounts+" razy!";
                 Application->ProcessMessages(); Sleep(1000);
 
                 if (Application->MessageBox("Czy chcesz zagrac jeszcze raz?",
@@ -240,12 +245,17 @@ void __fastcall TForm1::FormKeyDown(TObject *Sender, WORD &Key,
     if(Key == VK_SUBTRACT)
     {
 
-    }        VK_SPACE
+    }
     */
     if(Key == VK_SPACE)
     {
-        gameOnSwitch->Visible=false;
-        isGameOn=true;
+        if(gameOnSwitch->Visible==true)
+        {
+            gameOnSwitch->Visible=false;
+            isGameOn=true;
+            bounceCounts=0;
+        }
+
     }
 }
 //---------------------------------------------------------------------------
@@ -318,5 +328,6 @@ void __fastcall TForm1::playerRightKeyDown(TObject *Sender, WORD &Key,
     }
 }
 //---------------------------------------------------------------------------
+
 
 

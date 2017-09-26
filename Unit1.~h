@@ -25,6 +25,7 @@ __published:	// IDE-managed Components
     TLabel *scoreboard;
     TEdit *playerLeft;
     TEdit *playerRight;
+    TLabel *gameOnSwitch;
     void __fastcall timerBallTimer(TObject *Sender);
     void __fastcall movePaddleUpTimerTimer(TObject *Sender);
     void __fastcall moveRightPaddleDownTimer(TObject *Sender);
