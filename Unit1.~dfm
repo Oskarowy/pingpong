@@ -682,24 +682,6 @@ object Form1: TForm1
     ParentFont = False
     Visible = False
   end
-  object barrier1: TShape
-    Left = 368
-    Top = 168
-    Width = 49
-    Height = 49
-    Brush.Color = 4210688
-    Brush.Style = bsDiagCross
-    Visible = False
-  end
-  object barrier2: TShape
-    Left = 368
-    Top = 248
-    Width = 49
-    Height = 49
-    Brush.Color = 4210688
-    Brush.Style = bsDiagCross
-    Visible = False
-  end
   object playerLeft: TEdit
     Left = 256
     Top = 128
