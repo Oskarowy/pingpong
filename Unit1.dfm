@@ -1,8 +1,8 @@
 object Form1: TForm1
-  Left = 366
-  Top = 160
-  Width = 837
-  Height = 563
+  Left = 249
+  Top = 140
+  Width = 778
+  Height = 530
   Caption = 'PingPong by Oskar'
   Color = clBtnFace
   UseDockManager = True
@@ -22,14 +22,14 @@ object Form1: TForm1
   object background: TShape
     Left = 0
     Top = 0
-    Width = 821
-    Height = 525
+    Width = 762
+    Height = 492
     Align = alClient
     Brush.Color = 8421440
   end
   object ball: TImage
-    Left = 184
-    Top = 112
+    Left = 352
+    Top = 224
     Width = 23
     Height = 23
     AutoSize = True
@@ -92,7 +92,7 @@ object Form1: TForm1
     Visible = False
   end
   object paddleLeft: TImage
-    Left = 0
+    Left = 80
     Top = 200
     Width = 14
     Height = 208
@@ -390,8 +390,8 @@ object Form1: TForm1
     Transparent = True
   end
   object paddleRight: TImage
-    Left = 720
-    Top = 200
+    Left = 632
+    Top = 208
     Width = 14
     Height = 208
     AutoSize = True
@@ -688,8 +688,8 @@ object Form1: TForm1
     Transparent = True
   end
   object scoreboard: TLabel
-    Left = 32
-    Top = 384
+    Left = 320
+    Top = 80
     Width = 98
     Height = 25
     Alignment = taCenter
@@ -701,6 +701,20 @@ object Form1: TForm1
     Font.Style = [fsBold]
     ParentFont = False
     Visible = False
+  end
+  object gameOnSwitch: TLabel
+    Left = 248
+    Top = 184
+    Width = 262
+    Height = 23
+    Alignment = taCenter
+    Caption = 'Wci'#347'nij spacj'#281', aby rozpocz'#261#263' gr'#281'!'
+    Font.Charset = EASTEUROPE_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -19
+    Font.Name = 'Arial Narrow'
+    Font.Style = [fsBold]
+    ParentFont = False
   end
   object playerLeft: TEdit
     Left = 256
