@@ -36,6 +36,23 @@ TForm1 *Form1;
         else return false;
     }
     */
+
+    void setStartSetup(TImage * ball, TImage * paddleLeft, TImage * paddleRight,  TShape * background)
+    {
+        paddleLeft->Left=0;
+        paddleLeft->Top=background->Height/2-paddleLeft->Height/2;
+        paddleRight->Left=background->Width-paddleRight->Width;
+        paddleRight->Top=background->Height/2-paddleRight->Height/2;
+        ball->Left=background->Width/2;
+        ball->Top=background->Height/2;
+    }
+
+    void setScoreboard(TLabel *scoreboard, TShape *background)
+    {
+        scoreboard->Top=background->Top+scoreboard->Height;
+        scoreboard->Left=background->Left+background->Width/2-scoreboard->Width;
+    }
+
     bool isPointForRight(TImage *ball, TImage *paddle)
     {
         if(ball->Left <= paddle->Left+ball->Width-45)
@@ -57,12 +74,7 @@ TForm1 *Form1;
     }
     void serve (TImage * ball, TImage * paddleLeft, TImage * paddleRight,  TShape * background)
     {
-        paddleLeft->Left=0;
-        paddleLeft->Top=background->Height/2-paddleLeft->Height/2;
-        paddleRight->Left=background->Width-paddleRight->Width;
-        paddleRight->Top=background->Height/2-paddleRight->Height/2;
-        ball->Left=background->Width/2;
-        ball->Top=background->Height/2;
+        setStartSetup(ball,paddleLeft,paddleRight,background);
         y=-y;
         x=-x;
     }
@@ -233,12 +245,8 @@ void __fastcall TForm1::FormKeyUp(TObject *Sender, WORD &Key,
 
 void __fastcall TForm1::FormResize(TObject *Sender)
 {
-    scoreboard->Top=background->Top+scoreboard->Height;
-    scoreboard->Left=background->Left+background->Width/2-scoreboard->Width;
-    paddleLeft->Left=0;
-    paddleLeft->Top=background->Height/2-paddleLeft->Height/2;
-    paddleRight->Left=background->Width-paddleRight->Width;
-    paddleRight->Top=background->Height/2-paddleRight->Height/2;
+    setScoreboard(scoreboard,background);
+    setStartSetup(ball,paddleLeft,paddleRight,background);
 }
 //---------------------------------------------------------------------------
 
@@ -255,12 +263,8 @@ void __fastcall TForm1::FormCreate(TObject *Sender)
             }
     else*/ isGameOn=true;
 
-    scoreboard->Top=background->Top+scoreboard->Height;
-    scoreboard->Left=background->Left+background->Width/2-scoreboard->Width;
-    paddleLeft->Left=0;
-    paddleLeft->Top=background->Height/2-paddleLeft->Height/2;
-    paddleRight->Left=background->Width-paddleRight->Width;
-    paddleRight->Top=background->Height/2-paddleRight->Height/2;
+    setScoreboard(scoreboard,background);
+    setStartSetup(ball,paddleLeft,paddleRight,background);
 }
 //---------------------------------------------------------------------------
 

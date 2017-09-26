@@ -39,9 +39,9 @@ TForm1 *Form1;
 
     void setStartSetup(TImage * ball, TImage * paddleLeft, TImage * paddleRight,  TShape * background)
     {
-        paddleLeft->Left=0;
+        paddleLeft->Left=paddleLeft->Width*2;
         paddleLeft->Top=background->Height/2-paddleLeft->Height/2;
-        paddleRight->Left=background->Width-paddleRight->Width;
+        paddleRight->Left=background->Width-paddleRight->Width*3;
         paddleRight->Top=background->Height/2-paddleRight->Height/2;
         ball->Left=background->Width/2;
         ball->Top=background->Height/2;
@@ -55,8 +55,9 @@ TForm1 *Form1;
 
     bool isPointForRight(TImage *ball, TImage *paddle)
     {
-        if(ball->Left <= paddle->Left+ball->Width-45)
+        if(ball->Left <= paddle->Left+paddle->Width-ball->Width)
         {
+            ball->Visible=false;
             rightPlayerCounter++;
             return true;
         }
@@ -65,8 +66,9 @@ TForm1 *Form1;
 
     bool isPointForLeft(TImage *ball, TImage *paddle)
     {
-        if(ball->Left+ball->Width >= paddle->Left + paddle->Width+20)
+        if(ball->Left+ball->Width >= paddle->Left + ball->Width)
         {
+            ball->Visible=false;
             leftPlayerCounter++;
             return true;
         }
