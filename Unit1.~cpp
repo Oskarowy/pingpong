@@ -72,6 +72,16 @@ TForm1 *Form1;
         x*= -1;
         bounceCounts++;
     }
+
+    void setupTheRevenge(TImage * ball, TImage * paddleLeft, TImage * paddleRight,  TShape * background, TLabel *gameOnSwitch, TLabel *scoreboard, TTimer *timerBall)
+    {
+        scoreboard->Visible=false;
+        leftPlayerCounter=0;
+        rightPlayerCounter=0;
+        timerBall->Enabled=true;
+        serve(ball,paddleLeft,paddleRight,background,gameOnSwitch);
+        gameOnSwitch->Visible=true;
+    }
 //---------------------------------------------------------------------------
 __fastcall TForm1::TForm1(TComponent* Owner)
     : TForm(Owner)
@@ -127,12 +137,7 @@ void __fastcall TForm1::timerBallTimer(TObject *Sender)
                 if (Application->MessageBox("Czy chcesz zagrac jeszcze raz?",
 			    "Rewan¿", MB_YESNO | MB_ICONQUESTION)==IDYES)
                 {
-                    scoreboard->Visible=false;
-                    leftPlayerCounter=0;
-                    rightPlayerCounter=0;
-                    timerBall->Enabled=true;
-                    serve(ball,paddleLeft,paddleRight,background,gameOnSwitch);
-                    gameOnSwitch->Visible=true;
+                    setupTheRevenge(ball,paddleLeft,paddleRight,background,gameOnSwitch,scoreboard,timerBall);
                 }
                 else
                 {
@@ -169,12 +174,7 @@ void __fastcall TForm1::timerBallTimer(TObject *Sender)
                 if (Application->MessageBox("Czy chcesz zagrac jeszcze raz?",
 			    "Rewan¿", MB_YESNO | MB_ICONQUESTION)==IDYES)
                 {
-                    scoreboard->Visible=false;
-                    leftPlayerCounter=0;
-                    rightPlayerCounter=0;
-                    timerBall->Enabled=true;
-                    serve(ball,paddleLeft,paddleRight,background,gameOnSwitch);
-                    gameOnSwitch->Visible=true;
+                    setupTheRevenge(ball,paddleLeft,paddleRight,background,gameOnSwitch,scoreboard,timerBall);
                 }
                 else
                 {

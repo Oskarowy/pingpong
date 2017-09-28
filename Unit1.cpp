@@ -290,7 +290,7 @@ void __fastcall TForm1::playerRightKeyDown(TObject *Sender, WORD &Key,
     if(Key == VK_RETURN)
     {
         playerRight->Visible = false;
-        isGameOn=true;
+        gameOnSwitch->Visible = true;
     }
 }
 //---------------------------------------------------------------------------
