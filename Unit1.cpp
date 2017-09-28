@@ -15,28 +15,10 @@ TForm1 *Form1;
     int leftPlayerCounter=0;
     int rightPlayerCounter=0;
     int bounceCounts=0;
+    int acceleration = 10;
     bool isGameOn;
     AnsiString leftPlayerName="Lewy";
     AnsiString rightPlayerName="Prawy";
-
-   /* bool paddleLeftHit(TImage * ball, TImage * paddle)
-    {
-        if(ball->Left <= paddle->Left + paddle->Width &&
-           ball->Top <= paddle->Top + paddle->Height &&
-           ball->Top + ball->Height >= paddle->Top)
-        return true;
-        else return false;
-    }
-
-    bool paddleRightHit(TImage * ball, TImage * paddle)
-    {
-        if(ball->Left + ball->Width >= paddle->Left &&
-           ball->Top <= paddle->Top+paddle->Height &&
-           ball->Top + ball->Height >= paddle->Top)
-        return true;
-        else return false;
-    }
-    */
 
     void setStartSetup(TImage * ball, TImage * paddleLeft, TImage * paddleRight,  TShape * background, TLabel *gameOnSwitch)
     {
@@ -87,8 +69,18 @@ TForm1 *Form1;
 
     void bounce(TImage *ball, TTimer *timer)
     {
-        x=-x;
+        x*= -1;
         bounceCounts++;
+    }
+
+    void setupTheRevenge(TImage * ball, TImage * paddleLeft, TImage * paddleRight,  TShape * background, TLabel *gameOnSwitch, TLabel *scoreboard, TTimer *timerBall)
+    {
+        scoreboard->Visible=false;
+        leftPlayerCounter=0;
+        rightPlayerCounter=0;
+        timerBall->Enabled=true;
+        serve(ball,paddleLeft,paddleRight,background,gameOnSwitch);
+        gameOnSwitch->Visible=true;
     }
 //---------------------------------------------------------------------------
 __fastcall TForm1::TForm1(TComponent* Owner)
@@ -107,11 +99,6 @@ void __fastcall TForm1::timerBallTimer(TObject *Sender)
 
         if(ball->Top <= background->Top) y = -y;
         if(ball->Top+ball->Height >= background->Top+background->Height) y = -y;
-
-        /*
-        if(paddleLeftHit(ball,paddleLeft)) x = -x;
-        if(paddleRightHit(ball,paddleRight)) x = -x;
-        */
 
         // odbicie lew¹ paletk¹
         if((ball->Left <= paddleLeft->Left + paddleLeft->Width) &&
@@ -150,12 +137,7 @@ void __fastcall TForm1::timerBallTimer(TObject *Sender)
                 if (Application->MessageBox("Czy chcesz zagrac jeszcze raz?",
 			    "Rewan¿", MB_YESNO | MB_ICONQUESTION)==IDYES)
                 {
-                    scoreboard->Visible=false;
-                    leftPlayerCounter=0;
-                    rightPlayerCounter=0;
-                    timerBall->Enabled=true;
-                    serve(ball,paddleLeft,paddleRight,background,gameOnSwitch);
-                    gameOnSwitch->Visible=true;
+                    setupTheRevenge(ball,paddleLeft,paddleRight,background,gameOnSwitch,scoreboard,timerBall);
                 }
                 else
                 {
@@ -192,12 +174,7 @@ void __fastcall TForm1::timerBallTimer(TObject *Sender)
                 if (Application->MessageBox("Czy chcesz zagrac jeszcze raz?",
 			    "Rewan¿", MB_YESNO | MB_ICONQUESTION)==IDYES)
                 {
-                    scoreboard->Visible=false;
-                    leftPlayerCounter=0;
-                    rightPlayerCounter=0;
-                    timerBall->Enabled=true;
-                    serve(ball,paddleLeft,paddleRight,background,gameOnSwitch);
-                    gameOnSwitch->Visible=true;
+                    setupTheRevenge(ball,paddleLeft,paddleRight,background,gameOnSwitch,scoreboard,timerBall);
                 }
                 else
                 {
@@ -207,7 +184,6 @@ void __fastcall TForm1::timerBallTimer(TObject *Sender)
                 }
             }
         }
-
     }
 }
 //---------------------------------------------------------------------------
@@ -238,15 +214,6 @@ void __fastcall TForm1::FormKeyDown(TObject *Sender, WORD &Key,
     if(Key == VK_DOWN) moveRightPaddleDown->Enabled = true;
     if(Key == 0x57) moveLeftPaddleUp->Enabled = true;
     if(Key == 0x53) moveLeftPaddleDown->Enabled = true;
-    /*if(Key == VK_ADD)
-    {
-   
-    }
-    if(Key == VK_SUBTRACT)
-    {
-
-    }
-    */
     if(Key == VK_SPACE)
     {
         if(gameOnSwitch->Visible==true)
@@ -255,7 +222,6 @@ void __fastcall TForm1::FormKeyDown(TObject *Sender, WORD &Key,
             isGameOn=true;
             bounceCounts=0;
         }
-
     }
 }
 //---------------------------------------------------------------------------
@@ -280,15 +246,15 @@ void __fastcall TForm1::FormResize(TObject *Sender)
 
 void __fastcall TForm1::FormCreate(TObject *Sender)
 {
-    /*isGameOn=false;
-    Application->MessageBox("Witaj w grze w Ping Ponga!\n\nSterowanie: \n   Lewy gracz: klawisze W i S, \n   Prawy gracz: strza³ki góra i dó³\n\nJeœli chcesz, wprowadŸ w nastêpnym ekranie w³asne imiona dla obu graczy.\n\nSeta wygrywa gracz, który pierwszy zdobêdzie 11 punktów.\n\nAby gra by³a ciekawsza, wciœnij klawisz '+' i zobacz, co siê stanie! Poprzednie ustawienie przywraca wciœniêcie klawisza '-' :)\n\nOkno gry mo¿esz dowolnie powiêkszaæ",
+    isGameOn=false;
+    Application->MessageBox("Witaj w grze w Ping Ponga!\n\nSterowanie: \n   Lewy gracz: klawisze W i S, \n   Prawy gracz: strza³ki góra i dó³\n\nJeœli chcesz, wprowadŸ w nastêpnym ekranie w³asne imiona dla obu graczy.\n\nSeta wygrywa gracz, który pierwszy zdobêdzie 11 punktów.\n\nOkno gry mo¿esz dowolnie powiêkszaæ",
 				"PingPong by Oskarowy", MB_OK);
     if (Application->MessageBox("Czy chcesz wprowadziæ w³asne imiona graczy?",
 			"Wybierz nazwy graczy", MB_YESNO | MB_ICONQUESTION)==IDYES)
             {
                 playerLeft->Visible=true;
             }
-    else*/ gameOnSwitch->Visible=true;
+    else gameOnSwitch->Visible=true;
 
     setScoreboard(scoreboard,background);
     setStartSetup(ball,paddleLeft,paddleRight,background,gameOnSwitch);
@@ -330,4 +296,14 @@ void __fastcall TForm1::playerRightKeyDown(TObject *Sender, WORD &Key,
 //---------------------------------------------------------------------------
 
 
+
+void __fastcall TForm1::FormClose(TObject *Sender, TCloseAction &Action)
+{
+    if(Application->MessageBoxA("Czy na pewno zakoñczyc grê?","PotwierdŸ",
+    MB_YESNO| MB_ICONQUESTION) == IDNO )
+    {
+       Action=caNone;
+    }
+}
+//---------------------------------------------------------------------------
 

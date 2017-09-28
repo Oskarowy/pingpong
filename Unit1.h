@@ -43,6 +43,7 @@ __published:	// IDE-managed Components
     void __fastcall playerRightChange(TObject *Sender);
     void __fastcall playerRightKeyDown(TObject *Sender, WORD &Key,
           TShiftState Shift);
+    void __fastcall FormClose(TObject *Sender, TCloseAction &Action);
 private:	// User declarations
 public:		// User declarations
     __fastcall TForm1(TComponent* Owner);
