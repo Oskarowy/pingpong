@@ -10,12 +10,11 @@
 #pragma resource "*.dfm"
 TForm1 *Form1;
 
-    int x=-5;
-    int y=-5;
+    int x=-7;
+    int y=-7;
     int leftPlayerCounter=0;
     int rightPlayerCounter=0;
     int bounceCounts=0;
-    int acceleration = 10;
     bool isGameOn;
     AnsiString leftPlayerName="Lewy";
     AnsiString rightPlayerName="Prawy";
@@ -71,6 +70,8 @@ TForm1 *Form1;
     {
         x*= -1;
         bounceCounts++;
+        if(bounceCounts%2==1) sndPlaySound("snd/First.wav",SND_ASYNC);
+        else sndPlaySound("snd/Second.wav",SND_ASYNC);
     }
 
     void setupTheRevenge(TImage * ball, TImage * paddleLeft, TImage * paddleRight,  TShape * background, TLabel *gameOnSwitch, TLabel *scoreboard, TTimer *timerBall)
@@ -81,6 +82,14 @@ TForm1 *Form1;
         timerBall->Enabled=true;
         serve(ball,paddleLeft,paddleRight,background,gameOnSwitch);
         gameOnSwitch->Visible=true;
+    }
+
+    void exitGame()
+    {
+    sndPlaySound("snd/Over.wav",SND_ASYNC);
+    Application->MessageBox("Dziêki za grê! Kliknij OK aby wyjœæ",
+    "Podziêkowanie",NULL);
+    Application->Terminate();
     }
 //---------------------------------------------------------------------------
 __fastcall TForm1::TForm1(TComponent* Owner)
@@ -97,8 +106,9 @@ void __fastcall TForm1::timerBallTimer(TObject *Sender)
         ball->Left-= x;
         ball->Top+= y;
 
-        if(ball->Top <= background->Top) y = -y;
-        if(ball->Top+ball->Height >= background->Top+background->Height) y = -y;
+        if(ball->Top <= background->Top)y = -y;
+
+        if(ball->Top+ball->Height >= background->Top+background->Height)y = -y;
 
         // odbicie lew¹ paletk¹
         if((ball->Left <= paddleLeft->Left + paddleLeft->Width) &&
@@ -116,6 +126,7 @@ void __fastcall TForm1::timerBallTimer(TObject *Sender)
             if(leftPlayerCounter<11)
             {
                 isGameOn=false;
+                sndPlaySound("snd/Point.wav",SND_ASYNC);
                 scoreboard->Visible=true;
                 scoreboard->Caption="< Punkt dla gracza: "+leftPlayerName+" \n \n Wynik gry: \n" +leftPlayerName+
                 ": "+IntToStr(leftPlayerCounter)+"     "+rightPlayerName+": "+IntToStr(rightPlayerCounter)+
@@ -128,6 +139,7 @@ void __fastcall TForm1::timerBallTimer(TObject *Sender)
             else
             {
                 isGameOn=false;
+                sndPlaySound("snd/Winner.wav",SND_ASYNC);
                 timerBall->Enabled=false;
                 scoreboard->Visible=true;
                 scoreboard->Caption="< Punkt dla gracza: "+leftPlayerName+" \n \n Seta wygrywa gracz "+leftPlayerName+"!"+
@@ -136,15 +148,9 @@ void __fastcall TForm1::timerBallTimer(TObject *Sender)
 
                 if (Application->MessageBox("Czy chcesz zagrac jeszcze raz?",
 			    "Rewan¿", MB_YESNO | MB_ICONQUESTION)==IDYES)
-                {
-                    setupTheRevenge(ball,paddleLeft,paddleRight,background,gameOnSwitch,scoreboard,timerBall);
-                }
-                else
-                {
-                    Application->MessageBox("Dziêki za grê! Kliknij OK aby wyjœæ",
-                    "Podziêkowanie",NULL);
-                    Application->Terminate();
-                }
+                setupTheRevenge(ball,paddleLeft,paddleRight,background,gameOnSwitch,scoreboard,timerBall);
+
+                else exitGame();
             }
         }
 
@@ -153,6 +159,7 @@ void __fastcall TForm1::timerBallTimer(TObject *Sender)
             if(rightPlayerCounter<11)
             {
                 isGameOn=false;
+                sndPlaySound("snd/Point.wav",SND_ASYNC);
                 scoreboard->Visible=true;
                 scoreboard->Caption="Punkt dla gracza: "+rightPlayerName+" > \n \n Wynik gry: \n" +leftPlayerName+
                 ": "+IntToStr(leftPlayerCounter)+"     "+rightPlayerName+": "+IntToStr(rightPlayerCounter)+
@@ -165,6 +172,7 @@ void __fastcall TForm1::timerBallTimer(TObject *Sender)
             else
             {
                 isGameOn=false;
+                sndPlaySound("snd/Winner.wav",SND_ASYNC);
                 timerBall->Enabled=false;
                 scoreboard->Visible=true;
                 scoreboard->Caption="< Punkt dla gracza: "+rightPlayerName+" \n \n Seta wygrywa gracz "+rightPlayerName+"!"+
@@ -173,15 +181,9 @@ void __fastcall TForm1::timerBallTimer(TObject *Sender)
 
                 if (Application->MessageBox("Czy chcesz zagrac jeszcze raz?",
 			    "Rewan¿", MB_YESNO | MB_ICONQUESTION)==IDYES)
-                {
-                    setupTheRevenge(ball,paddleLeft,paddleRight,background,gameOnSwitch,scoreboard,timerBall);
-                }
-                else
-                {
-                    Application->MessageBox("Dziêki za grê! Kliknij OK aby wyjœæ",
-                    "Podziêkowanie",NULL);
-                    Application->Terminate();
-                }
+                setupTheRevenge(ball,paddleLeft,paddleRight,background,gameOnSwitch,scoreboard,timerBall);
+
+                else exitGame();
             }
         }
     }
@@ -219,6 +221,7 @@ void __fastcall TForm1::FormKeyDown(TObject *Sender, WORD &Key,
         if(gameOnSwitch->Visible==true)
         {
             gameOnSwitch->Visible=false;
+            sndPlaySound("snd/Serve.wav",SND_ASYNC);
             isGameOn=true;
             bounceCounts=0;
         }
@@ -299,6 +302,7 @@ void __fastcall TForm1::playerRightKeyDown(TObject *Sender, WORD &Key,
 
 void __fastcall TForm1::FormClose(TObject *Sender, TCloseAction &Action)
 {
+    sndPlaySound("snd/Over.wav",SND_ASYNC);
     if(Application->MessageBoxA("Czy na pewno zakoñczyc grê?","PotwierdŸ",
     MB_YESNO| MB_ICONQUESTION) == IDNO )
     {
