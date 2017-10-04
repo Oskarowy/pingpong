@@ -10,12 +10,13 @@
 #pragma resource "*.dfm"
 TForm1 *Form1;
 
-    int x=-7;
-    int y=-7;
+    int x=7;
+    int y=7;
     int leftPlayerCounter=0;
     int rightPlayerCounter=0;
     int bounceCounts=0;
     bool isGameOn;
+    bool isSoundOn = true;
     AnsiString leftPlayerName="Lewy";
     AnsiString rightPlayerName="Prawy";
 
@@ -66,14 +67,6 @@ TForm1 *Form1;
         x=-x;
     }
 
-    void bounce(TImage *ball, TTimer *timer)
-    {
-        x*= -1;
-        bounceCounts++;
-        if(bounceCounts%2==1) sndPlaySound("snd/First.wav",SND_ASYNC);
-        else sndPlaySound("snd/Second.wav",SND_ASYNC);
-    }
-
     void setupTheRevenge(TImage * ball, TImage * paddleLeft, TImage * paddleRight,  TShape * background, TLabel *gameOnSwitch, TLabel *scoreboard, TTimer *timerBall)
     {
         scoreboard->Visible=false;
@@ -84,13 +77,50 @@ TForm1 *Form1;
         gameOnSwitch->Visible=true;
     }
 
+    void playBounceSound(bool isSoundOn,int bounceCounts)
+    {
+      if(isSoundOn)
+      {
+            if(bounceCounts%2==1) sndPlaySound("snd/First.wav",SND_ASYNC);
+            else sndPlaySound("snd/Second.wav",SND_ASYNC);
+      }
+    }
+
+    void bounce(TImage *ball, TTimer *timer)
+    {
+        x = -x;
+        bounceCounts++;
+        playBounceSound(isSoundOn, bounceCounts);
+    }
+
+    void playPointSound(bool isSoundOn)
+    {
+       if(isSoundOn) sndPlaySound("snd/Point.wav",SND_ASYNC);
+    }
+
+    void playWinnerSound(bool isSoundOn)
+    {
+        if(isSoundOn) sndPlaySound("snd/Winner.wav",SND_ASYNC);
+    }
+
+    void playServeSound(bool isSoundOn)
+    {
+        if(isSoundOn) sndPlaySound("snd/Serve.wav",SND_ASYNC);
+    }
+
+    void playGameOverSound(bool isSoundOn)
+    {
+        if(isSoundOn) sndPlaySound("snd/Over.wav",SND_ASYNC);
+    }
+
     void exitGame()
     {
-    sndPlaySound("snd/Over.wav",SND_ASYNC);
-    Application->MessageBox("Dziêki za grê! Kliknij OK aby wyjœæ",
-    "Podziêkowanie",NULL);
-    Application->Terminate();
+        playGameOverSound(isSoundOn);
+        Application->MessageBox("Dziêki za grê! Kliknij OK aby wyjœæ",
+        "Podziêkowanie",NULL);
+        Application->Terminate();
     }
+
 //---------------------------------------------------------------------------
 __fastcall TForm1::TForm1(TComponent* Owner)
     : TForm(Owner)
@@ -103,7 +133,7 @@ void __fastcall TForm1::timerBallTimer(TObject *Sender)
     if(isGameOn)
     {
         ball->Visible=true;
-        ball->Left-= x;
+        ball->Left+= x;
         ball->Top+= y;
 
         if(ball->Top <= background->Top)y = -y;
@@ -113,20 +143,27 @@ void __fastcall TForm1::timerBallTimer(TObject *Sender)
         // odbicie lew¹ paletk¹
         if((ball->Left <= paddleLeft->Left + paddleLeft->Width) &&
            (ball->Top <= paddleLeft->Top + paddleLeft->Height) &&
-           (ball->Top + ball->Height >= paddleLeft->Top)) bounce(ball,timerBall);
-
+           (ball->Top + ball->Height >= paddleLeft->Top))
+                {
+                    if(x<0)
+                        bounce(ball,timerBall);
+                }
 
         //odbicie praw¹ paletk¹
         if((ball->Left + ball->Width >= paddleRight->Left) &&
            (ball->Top <= paddleRight->Top+paddleRight->Height) &&
-           (ball->Top + ball->Height >= paddleRight->Top)) bounce(ball,timerBall);
+           (ball->Top + ball->Height >= paddleRight->Top))
+                {
+                    if(x>0)
+                        bounce(ball,timerBall);
+                }
 
         if(isPointForLeft(ball,paddleRight))
         {
             if(leftPlayerCounter<11)
             {
                 isGameOn=false;
-                sndPlaySound("snd/Point.wav",SND_ASYNC);
+                playPointSound(isSoundOn);
                 scoreboard->Visible=true;
                 scoreboard->Caption="< Punkt dla gracza: "+leftPlayerName+" \n \n Wynik gry: \n" +leftPlayerName+
                 ": "+IntToStr(leftPlayerCounter)+"     "+rightPlayerName+": "+IntToStr(rightPlayerCounter)+
@@ -139,7 +176,7 @@ void __fastcall TForm1::timerBallTimer(TObject *Sender)
             else
             {
                 isGameOn=false;
-                sndPlaySound("snd/Winner.wav",SND_ASYNC);
+                playWinnerSound(isSoundOn);
                 timerBall->Enabled=false;
                 scoreboard->Visible=true;
                 scoreboard->Caption="< Punkt dla gracza: "+leftPlayerName+" \n \n Seta wygrywa gracz "+leftPlayerName+"!"+
@@ -159,7 +196,7 @@ void __fastcall TForm1::timerBallTimer(TObject *Sender)
             if(rightPlayerCounter<11)
             {
                 isGameOn=false;
-                sndPlaySound("snd/Point.wav",SND_ASYNC);
+                playPointSound(isSoundOn);
                 scoreboard->Visible=true;
                 scoreboard->Caption="Punkt dla gracza: "+rightPlayerName+" > \n \n Wynik gry: \n" +leftPlayerName+
                 ": "+IntToStr(leftPlayerCounter)+"     "+rightPlayerName+": "+IntToStr(rightPlayerCounter)+
@@ -172,7 +209,7 @@ void __fastcall TForm1::timerBallTimer(TObject *Sender)
             else
             {
                 isGameOn=false;
-                sndPlaySound("snd/Winner.wav",SND_ASYNC);
+                playWinnerSound(isSoundOn);
                 timerBall->Enabled=false;
                 scoreboard->Visible=true;
                 scoreboard->Caption="< Punkt dla gracza: "+rightPlayerName+" \n \n Seta wygrywa gracz "+rightPlayerName+"!"+
@@ -221,11 +258,13 @@ void __fastcall TForm1::FormKeyDown(TObject *Sender, WORD &Key,
         if(gameOnSwitch->Visible==true)
         {
             gameOnSwitch->Visible=false;
-            sndPlaySound("snd/Serve.wav",SND_ASYNC);
+            playServeSound(isSoundOn);
             isGameOn=true;
             bounceCounts=0;
         }
     }
+    if(Key == VK_ADD) isSoundOn = true;
+    if(Key == VK_SUBTRACT) isSoundOn = false;
 }
 //---------------------------------------------------------------------------
 //---------------------------------------------------------------------------
@@ -250,7 +289,7 @@ void __fastcall TForm1::FormResize(TObject *Sender)
 void __fastcall TForm1::FormCreate(TObject *Sender)
 {
     isGameOn=false;
-    Application->MessageBox("Witaj w grze w Ping Ponga!\n\nSterowanie: \n   Lewy gracz: klawisze W i S, \n   Prawy gracz: strza³ki góra i dó³\n\nJeœli chcesz, wprowadŸ w nastêpnym ekranie w³asne imiona dla obu graczy.\n\nSeta wygrywa gracz, który pierwszy zdobêdzie 11 punktów.\n\nOkno gry mo¿esz dowolnie powiêkszaæ",
+    Application->MessageBox("Witaj w grze w Ping Ponga!\n\nSterowanie: \n   Lewy gracz: klawisze W i S, \n   Prawy gracz: strza³ki góra i dó³\n\nJeœli chcesz, wprowadŸ w nastêpnym ekranie w³asne imiona dla obu graczy.\n\nSeta wygrywa gracz, który pierwszy zdobêdzie 11 punktów.\n\nWciœnij klawisze +/-, aby w³¹czyæ/wy³¹czyæ dŸwiêki podczas gry.\n\nOkno gry mo¿esz dowolnie powiêkszaæ",
 				"PingPong by Oskarowy", MB_OK);
     if (Application->MessageBox("Czy chcesz wprowadziæ w³asne imiona graczy?",
 			"Wybierz nazwy graczy", MB_YESNO | MB_ICONQUESTION)==IDYES)
@@ -302,7 +341,7 @@ void __fastcall TForm1::playerRightKeyDown(TObject *Sender, WORD &Key,
 
 void __fastcall TForm1::FormClose(TObject *Sender, TCloseAction &Action)
 {
-    sndPlaySound("snd/Over.wav",SND_ASYNC);
+    playGameOverSound(isSoundOn);
     if(Application->MessageBoxA("Czy na pewno zakoñczyc grê?","PotwierdŸ",
     MB_YESNO| MB_ICONQUESTION) == IDNO )
     {

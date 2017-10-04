@@ -10,12 +10,13 @@
 #pragma resource "*.dfm"
 TForm1 *Form1;
 
-    int x=-7;
-    int y=-7;
+    int x=7;
+    int y=7;
     int leftPlayerCounter=0;
     int rightPlayerCounter=0;
     int bounceCounts=0;
     bool isGameOn;
+    bool isSoundOn = false;
     AnsiString leftPlayerName="Lewy";
     AnsiString rightPlayerName="Prawy";
 
@@ -68,7 +69,7 @@ TForm1 *Form1;
 
     void bounce(TImage *ball, TTimer *timer)
     {
-        x*= -1;
+        x = -x;
         bounceCounts++;
         if(bounceCounts%2==1) sndPlaySound("snd/First.wav",SND_ASYNC);
         else sndPlaySound("snd/Second.wav",SND_ASYNC);
@@ -103,7 +104,7 @@ void __fastcall TForm1::timerBallTimer(TObject *Sender)
     if(isGameOn)
     {
         ball->Visible=true;
-        ball->Left-= x;
+        ball->Left+= x;
         ball->Top+= y;
 
         if(ball->Top <= background->Top)y = -y;
@@ -113,13 +114,20 @@ void __fastcall TForm1::timerBallTimer(TObject *Sender)
         // odbicie lew¹ paletk¹
         if((ball->Left <= paddleLeft->Left + paddleLeft->Width) &&
            (ball->Top <= paddleLeft->Top + paddleLeft->Height) &&
-           (ball->Top + ball->Height >= paddleLeft->Top)) bounce(ball,timerBall);
-
+           (ball->Top + ball->Height >= paddleLeft->Top))
+                {
+                    if(x<0)
+                        bounce(ball,timerBall);
+                }
 
         //odbicie praw¹ paletk¹
         if((ball->Left + ball->Width >= paddleRight->Left) &&
            (ball->Top <= paddleRight->Top+paddleRight->Height) &&
-           (ball->Top + ball->Height >= paddleRight->Top)) bounce(ball,timerBall);
+           (ball->Top + ball->Height >= paddleRight->Top))
+                {
+                    if(x>0)
+                        bounce(ball,timerBall);
+                }
 
         if(isPointForLeft(ball,paddleRight))
         {
@@ -148,9 +156,8 @@ void __fastcall TForm1::timerBallTimer(TObject *Sender)
 
                 if (Application->MessageBox("Czy chcesz zagrac jeszcze raz?",
 			    "Rewan¿", MB_YESNO | MB_ICONQUESTION)==IDYES)
-                {
-                    setupTheRevenge(ball,paddleLeft,paddleRight,background,gameOnSwitch,scoreboard,timerBall);
-                }
+                setupTheRevenge(ball,paddleLeft,paddleRight,background,gameOnSwitch,scoreboard,timerBall);
+
                 else exitGame();
             }
         }
@@ -182,9 +189,8 @@ void __fastcall TForm1::timerBallTimer(TObject *Sender)
 
                 if (Application->MessageBox("Czy chcesz zagrac jeszcze raz?",
 			    "Rewan¿", MB_YESNO | MB_ICONQUESTION)==IDYES)
-                {
-                    setupTheRevenge(ball,paddleLeft,paddleRight,background,gameOnSwitch,scoreboard,timerBall);
-                }
+                setupTheRevenge(ball,paddleLeft,paddleRight,background,gameOnSwitch,scoreboard,timerBall);
+
                 else exitGame();
             }
         }
@@ -252,7 +258,7 @@ void __fastcall TForm1::FormResize(TObject *Sender)
 void __fastcall TForm1::FormCreate(TObject *Sender)
 {
     isGameOn=false;
-    Application->MessageBox("Witaj w grze w Ping Ponga!\n\nSterowanie: \n   Lewy gracz: klawisze W i S, \n   Prawy gracz: strza³ki góra i dó³\n\nJeœli chcesz, wprowadŸ w nastêpnym ekranie w³asne imiona dla obu graczy.\n\nSeta wygrywa gracz, który pierwszy zdobêdzie 11 punktów.\n\nOkno gry mo¿esz dowolnie powiêkszaæ",
+    Application->MessageBox("Witaj w grze w Ping Ponga!\n\nSterowanie: \n   Lewy gracz: klawisze W i S, \n   Prawy gracz: strza³ki góra i dó³\n\nJeœli chcesz, wprowadŸ w nastêpnym ekranie w³asne imiona dla obu graczy.\n\nSeta wygrywa gracz, który pierwszy zdobêdzie 11 punktów.\n\nWciœnij klawisze +/-, aby w³¹czyæ/wy³¹czyæ dŸwiêki podczas gry.\n\nOkno gry mo¿esz dowolnie powiêkszaæ",
 				"PingPong by Oskarowy", MB_OK);
     if (Application->MessageBox("Czy chcesz wprowadziæ w³asne imiona graczy?",
 			"Wybierz nazwy graczy", MB_YESNO | MB_ICONQUESTION)==IDYES)
